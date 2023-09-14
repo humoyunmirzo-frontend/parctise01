@@ -1,10 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { BrowserRouter as Router } from "react-router-dom";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+import Favicon from "react-favicon";
+import logo from "./assets/log.png";
+//* Import global css
+import "./styles/globals.css";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <Favicon url={logo} />
+    <Router>
+      <App />
+    </Router>
   </React.StrictMode>
 );
