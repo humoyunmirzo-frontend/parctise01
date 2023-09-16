@@ -15,6 +15,7 @@ export default function Navbar() {
         background: "white",
         overflowX: "scroll",
         px: "8px",
+        mb: "5px",
         // scroll style
         scrollbarWidth: "thin",
         "&::-webkit-scrollbar": {
@@ -32,8 +33,8 @@ export default function Navbar() {
     >
       {[...Array(20)].map((_, i) => (
         <Box
-          className={`${i === 0 ? "active" : ""} icon-navbar_wrapper`}
           key={i}
+          className={`${i === 0 ? "active" : ""} icon-navbar_wrapper`}
           sx={{
             cursor: "pointer",
             display: "grid",
