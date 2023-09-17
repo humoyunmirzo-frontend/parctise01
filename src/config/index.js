@@ -1,4 +1,4 @@
-export const settings = ["Profile", "Account", "Dashboard", "Logout"];
+export const settings = ["Profile","Logout"];
 
 export const countries = [
     { code: 'AD', label: 'Andorra', phone: '376' },

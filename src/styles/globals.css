@@ -36,3 +36,9 @@
   color: black;
   border-bottom: 2px solid #ff385c !important;
 }
+
+.card-detail__image:hover {
+  filter: brightness(85%);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
