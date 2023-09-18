@@ -17,6 +17,7 @@ export const DataFetching = {
       return { data: [], success: false };
     }
   },
+
   async getRoomsRead(slug) {
     try {
       const { data } = await axios.get(`${BASE_URL}/rooms/${slug}`);
@@ -26,11 +27,50 @@ export const DataFetching = {
       return { data: {}, success: false };
     }
   },
-  async authRegister(data) {
+  
+  async authVerify(body) {
     try {
-      const res = await axios.post(`${BASE_URL}/users/auth/register`, data);
-      console.log(res);
-      // return { data, success: true };
+      const { data } = await axios.post(
+        `${BASE_URL}/users/send/verification-code/`,
+        body
+      );
+      return { data, success: true };
+    } catch (error) {
+      console.log(error);
+      return { success: false };
+    }
+  },
+
+  async authRegister(body) {
+    try {
+      const { data } = await axios.post(
+        `${BASE_URL}/users/auth/register/`,
+        body
+      );
+      return { data, success: true };
+    } catch (error) {
+      console.log(error);
+      return { success: false };
+    }
+  },
+
+  async verifyPhoneCode(body) {
+    try {
+      const { data } = await axios.post(
+        `${BASE_URL}/users/verify/phone-number/`,
+        body
+      );
+      return { data, success: true };
+    } catch (error) {
+      console.log(error);
+      return { success: false };
+    }
+  },
+
+  async getAuthToken(body) {
+    try {
+      const res = await axios.post(`${BASE_URL}/users/auth/token/`, body);
+      return { res, success: true };
     } catch (error) {
       console.log(error);
       return { success: false };

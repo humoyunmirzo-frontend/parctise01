@@ -130,8 +130,8 @@ export default function CardDetailPage() {
                 </Box>
                 {/* {item} */}
                 <Avatar
-                  alt={item && item?.facilities[0].name}
-                  src={item && item?.facilities[0].icon}
+                  alt={"Username"}
+                  src={item?.facilities.length && item?.facilities[0].icon}
                   sx={{ width: 56, height: 56 }}
                 />
               </Stack>

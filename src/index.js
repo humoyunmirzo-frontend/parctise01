@@ -14,10 +14,14 @@ import { store } from "./redux/store";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Favicon url={logo} />
+    <ToastContainer />
     <Router>
       <Provider store={store}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>

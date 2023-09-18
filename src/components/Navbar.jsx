@@ -13,6 +13,17 @@ export default function Navbar({ categories }) {
         pt: "30px",
         pb: "10px",
         background: "white",
+        overflowX: "scroll",
+        "&::-webkit-scrollbar": {
+          height: "2px",
+        },
+        "&::-webkit-scrollbar-track": {
+          boxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+          webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#ff385c",
+        },
       }}
     >
       {categories?.map((item, i) => (
@@ -33,9 +44,6 @@ export default function Navbar({ categories }) {
             height={150}
             width={150}
             threshold={0.95}
-            onContentVisible={() => {
-              console.log("loaded!");
-            }}
             className="logo-header__wrapper"
           >
             <img src={item.icon} alt="Logo" className="logo-header" />

@@ -29,12 +29,19 @@ export default function HomePage() {
     getData();
   }, []);
 
+  const filterData = () => {
+    let newData = cardItem.filter((item) =>
+      item.title.toLowerCase().includes(search.toLowerCase())
+    );
+    return search.trim().length ? newData : cardItem;
+  };
+
   return (
     <>
       <Header>
         <TextField
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value.trim())}
           sx={{
             display: {
               xs: "none",
@@ -69,8 +76,8 @@ export default function HomePage() {
       <Container maxWidth="xl" sx={{ minHeight: "100vh" }}>
         <Navbar categories={categories} />
         {isLoading ? (
-          <Grid container spacing={2} width={"100%"}>
-            {[...Array(4)].map((_, i) => (
+          <Grid container spacing={2} width={"100%"} mb={4}>
+            {[...Array(8)].map((_, i) => (
               <Grid key={i} item xs={12} sm={6} md={4} lg={3} sx={{ pt: 0.5 }}>
                 <Skeleton width={"100%"} height={250} />
                 <Skeleton width="100%" />
@@ -81,7 +88,7 @@ export default function HomePage() {
           </Grid>
         ) : (
           <Grid container spacing={2} mt={2}>
-            {cardItem.map((item, i) => (
+            {filterData().map((item, i) => (
               <CardHero key={i} item={item} />
             ))}
           </Grid>
