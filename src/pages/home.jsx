@@ -10,8 +10,17 @@ import { Header, Navbar, Footer, CardHero } from "../components";
 import { useEffect, useState } from "react";
 import { DataFetching } from "../api";
 import { BsSearch } from "react-icons/bs";
+import { useSelector, useDispatch } from "react-redux";
+import { setRooms } from "../redux/rooms-slice";
+import { setCategory } from "../redux/category-slice";
 
 export default function HomePage() {
+  const rooms = useSelector(({ roomsSlice }) => roomsSlice.rooms);
+  const categoryStore = useSelector(
+    ({ categorySlice }) => categorySlice.category
+  );
+  const dispatch = useDispatch();
+
   const [cardItem, setCardItem] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
@@ -19,13 +28,22 @@ export default function HomePage() {
 
   useEffect(() => {
     const getData = async () => {
-      const { data, success, category } = await DataFetching.getRoomsData();
-      if (success) {
-        setCardItem(data);
-        setIsLoading(!success);
-        setCategories(category);
+      if (!rooms.length && !categoryStore.length) {
+        const { data, success, category } = await DataFetching.getRoomsData();
+        if (success) {
+          setCardItem(data);
+          setIsLoading(!success);
+          setCategories(category);
+          dispatch(setCategory(category));
+          dispatch(setRooms(data));
+        }
+      } else {
+        setCardItem(rooms);
+        setCategories(categoryStore);
+        setIsLoading(false);
       }
     };
+
     getData();
   }, []);
 
@@ -57,7 +75,7 @@ export default function HomePage() {
           size="small"
           InputLabelProps={{ shrink: false, disableUnderline: true }}
           placeholder="Search..."
-          autoComplete="off"
+          autoComplete={false}
           InputProps={{
             style: {
               border: "1px solid #ff385c",

@@ -13,13 +13,21 @@ import {
   ImageListItem,
   Stack,
   Typography,
+  useMediaQuery,
+  FormControl,
+  MenuItem,
+  Select,
+  InputLabel,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { Footer, Header } from "../components";
 import { useNavigate, useParams } from "react-router-dom";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
 import { DataFetching } from "../api";
 import { useEffect, useState } from "react";
+import { format, differenceInDays } from "date-fns";
+import { toast } from "react-toastify";
+import LazyLoad from "react-lazy-load";
 
 function srcset(image) {
   return {
@@ -33,6 +41,13 @@ export default function CardDetailPage() {
   const [item, setItem] = useState("");
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [date_in, setDateIn] = useState("");
+  const [date_out, setDateOut] = useState("");
+  const [count, setCount] = useState(1);
+  const [guestCount, setGuestCount] = useState(1);
+
+  const theme = useTheme();
+  const matchDownMd = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     const getData = async () => {
@@ -48,7 +63,18 @@ export default function CardDetailPage() {
     getData();
   }, [id]);
 
+  useEffect(() => {
+    let days = differenceInDays(
+      new Date(date_out ? date_out : "2023-09-19"),
+      new Date(date_in ? date_in : "2023-09-18")
+    );
+    typeof days === "number" && setCount(days);
+  }, [date_out, date_in]);
+
   console.log(item);
+  const submitData = () => {
+
+  };
 
   return (
     <>
@@ -69,11 +95,13 @@ export default function CardDetailPage() {
           >
             Trophy | Dior Belle Maison Suite
           </Typography>
-          <Stack direction={"row"} gap={"5px"} mt={"8px"}>
+          <Stack direction={{ xs: "column", md: "row" }} gap={"5px"} mt={"8px"}>
             <Typography sx={{ textDecoration: "underline", cursor: "pointer" }}>
               {Math.floor(Math.random() * 1000)} review
             </Typography>
-            <Typography>•</Typography>
+            <Typography sx={{ display: { xs: "none", md: "block" } }}>
+              •
+            </Typography>
             <Typography sx={{ textDecoration: "underline", cursor: "pointer" }}>
               {item?.address}
             </Typography>
@@ -81,9 +109,13 @@ export default function CardDetailPage() {
 
           {/* Image Gallery */}
           <ImageList
-            sx={{ width: "100%", mt: "20px", borderRadius: "20px" }}
+            sx={{
+              width: "100%",
+              mt: "20px",
+              borderRadius: "20px",
+            }}
             variant="quilted"
-            cols={4}
+            cols={matchDownMd ? 2 : 4}
             rowHeight={200}
           >
             {item?.photos?.slice(0, 5)?.map((item, i) => {
@@ -94,7 +126,7 @@ export default function CardDetailPage() {
               };
               return (
                 <ImageListItem
-                  key={item.title}
+                  key={i}
                   cols={item.cols || 1}
                   rows={item.rows || 1}
                 >
@@ -112,7 +144,11 @@ export default function CardDetailPage() {
 
           <Grid container spacing={4} mt={"20px"}>
             <Grid item sx={{ width: { sm: "100%", md: "70%" } }}>
-              <Stack direction={"row"} justifyContent={"space-between"}>
+              <Stack
+                direction={{ xs: "column-reverse", sm: "row" }}
+                justifyContent={"space-between"}
+                gap={"8px"}
+              >
                 <Box>
                   <Typography
                     variant="h4"
@@ -135,6 +171,51 @@ export default function CardDetailPage() {
                   sx={{ width: 56, height: 56 }}
                 />
               </Stack>
+              <Divider sx={{ my: "20px" }} />
+              <Typography variant={"h4"} sx={{ fontWeight: "500" }}>
+                What this place offers
+              </Typography>
+              <Stack
+                direction={{ xs: "column", md: "row" }}
+                flexWrap={"wrap"}
+                gap={"2rem"}
+                mt={2}
+              >
+                {item.services.map((data) => (
+                  <Stack
+                    key={data.name}
+                    width={{ xs: "100%", md: "48%" }}
+                    direction={"row"}
+                    gap={"8px"}
+                    alignItems={"center"}
+                  >
+                    <LazyLoad height={40} width={50} threshold={0.95}>
+                      <img
+                        src={`https://api.airbnb.tw1.su${data.icon}`}
+                        alt="Logo"
+                        className="logo-header"
+                        style={{ objectFit: "cover" }}
+                      />
+                    </LazyLoad>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontFamily: "inherit", fontWeight: "500" }}
+                    >
+                      {data.name}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
+              <Divider sx={{ my: "20px" }} />
+              <Box
+                component={"iframe"}
+                src={`https://www.google.com/maps?q=${item.location.lat},${item.location.lng}&hl=es;z%3D14&amp&output=embed`}
+                width={"100%"}
+                height={400}
+                frameBorder="0"
+                style={{ border: "0px" }}
+                allowFullScreen={true}
+              ></Box>
             </Grid>
             <Grid item sx={{ flex: "1", maxWidth: "400px" }}>
               <Card
@@ -144,6 +225,8 @@ export default function CardDetailPage() {
                   border: "1px solid rgb(221, 221, 221)",
                   borderRadius: "12px",
                   p: "24px",
+                  position: { xs: "relative", md: "sticky" },
+                  top: { xs: "0", md: "30vh" },
                 }}
               >
                 <CardContent sx={{ p: "0px" }}>
@@ -175,13 +258,43 @@ export default function CardDetailPage() {
                   >
                     <DesktopDatePicker
                       sx={{ width: "50%" }}
-                      defaultValue={dayjs(new Date(Date.now()))}
+                      format="YYYY/MM/DD"
+                      value={date_in}
+                      onChange={(date) =>
+                        setDateIn(
+                          format(
+                            new Date(date.$y, date.$M, date.$D),
+                            "yyyy-MM-dd"
+                          )
+                        )
+                      }
                     />
                     <DesktopDatePicker
                       sx={{ width: "50%" }}
-                      defaultValue={dayjs(new Date(Date.now()))}
+                      format="YYYY/MM/DD"
+                      value={date_out}
+                      onChange={(date) =>
+                        setDateOut(
+                          format(
+                            new Date(date.$y, date.$M, date.$D),
+                            "yyyy-MM-dd"
+                          )
+                        )
+                      }
                     />
                   </Stack>
+                  <FormControl fullWidth sx={{ mt: "10px" }}>
+                    <InputLabel>Guest</InputLabel>
+                    <Select
+                      value={guestCount}
+                      label="Age"
+                      onChange={(e) => setGuestCount(e.target.value)}
+                    >
+                      {[...Array(8)].map((_, i) => (
+                        <MenuItem value={i + 1}>{i + 1}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </CardContent>
                 <CardActions sx={{ px: "0px" }} my={2}>
                   <Button
@@ -194,6 +307,7 @@ export default function CardDetailPage() {
                       fontFamily: "inherit",
                       fontWeight: "500",
                     }}
+                    onClick={submitData}
                   >
                     Reserve
                   </Button>
@@ -220,9 +334,11 @@ export default function CardDetailPage() {
                           color: "gray",
                         }}
                       >
-                        ${item?.price} x3 nights
+                        ${item?.price} {`x${count}`} nights
                       </Typography>
-                      <Typography sx={{ color: "gray" }}>$877</Typography>
+                      <Typography sx={{ color: "gray" }}>
+                        ${item?.price * count}
+                      </Typography>
                     </Stack>
                     <Stack direction={"row"} justifyContent={"space-between"}>
                       <Typography
@@ -254,7 +370,7 @@ export default function CardDetailPage() {
                           fontWeight: "600",
                         }}
                       >
-                        ${item?.price + 70}
+                        ${item?.price * count + 70}
                       </Typography>
                     </Stack>
                   </Box>
@@ -264,7 +380,6 @@ export default function CardDetailPage() {
           </Grid>
         </Container>
       )}
-
       <Footer />
     </>
   );

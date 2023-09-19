@@ -7,7 +7,6 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Tooltip from "@mui/material/Tooltip";
 import {
   MenuItem,
   Button,
@@ -26,6 +25,7 @@ import { removeUser, setUser } from "../redux/auth-slice";
 import { DataFetching } from "../api";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { toast } from "react-toastify";
+import { RiUserSettingsLine } from 'react-icons/ri'
 
 function Header({ children }) {
   const auth = useSelector(({ authSlice }) => authSlice.user);
@@ -143,15 +143,21 @@ function Header({ children }) {
         top: "0",
         zIndex: "100",
         fontFamily: "inherit !important",
-        minHeight: "10vh",
+        py: '10px',
         background: "transparent",
         color: "black",
         borderBottom: "1px solid #e6e6e6",
         backgroundColor: "white",
       }}
       elevation={0}
+
     >
-      <Container maxWidth="xl">
+      <Container
+        maxWidth="xl"
+        display={'flex'}
+        alignItems={'center'}
+        height={'100%'}
+      >
         <Toolbar
           disableGutters
           sx={{
@@ -211,7 +217,7 @@ function Header({ children }) {
                   </IconButton>
                 </Stack>
                 <Menu
-                  sx={{ mt: "45px" }}
+                  sx={{ mt: "45px", width: 350 }}
                   anchorEl={anchorElUser}
                   anchorOrigin={{
                     vertical: "top",
@@ -225,9 +231,10 @@ function Header({ children }) {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{setting}</Typography>
+                  {settings.map(({ icon, name }) => (
+                    <MenuItem sx={{ display: 'flex', gap: '10px' }} onClick={handleCloseUserMenu}>
+                      {icon}
+                      <Typography>{name}</Typography>
                     </MenuItem>
                   ))}
                 </Menu>

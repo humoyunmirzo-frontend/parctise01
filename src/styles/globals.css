@@ -37,6 +37,11 @@
   border-bottom: 2px solid #ff385c !important;
 }
 
+.MuiList-root {
+  width: 200px !important;
+  box-shadow: 2px 2px 20px rgb(132, 132, 132) !important;
+}
+
 .card-detail__image:hover {
   filter: brightness(85%);
   transition: all 0.2s ease-in-out;

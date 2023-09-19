@@ -8,9 +8,9 @@ export default function Navbar({ categories }) {
       gap={4}
       sx={{
         position: "sticky",
-        top: "8vh",
+        top: "11vh",
         zIndex: "99",
-        pt: "30px",
+        pt: "25px",
         pb: "10px",
         background: "white",
         overflowX: "scroll",
@@ -36,13 +36,13 @@ export default function Navbar({ categories }) {
             placeItems: "center",
             color: "#bababa",
             "&:hover": { borderBottom: "2px solid #ff385c", color: "#000" },
-            height: "80px",
-            width: "100px",
+            height: "70px",
+            width: "80px",
           }}
         >
           <LazyLoad
-            height={150}
-            width={150}
+            height={130}
+            width={130}
             threshold={0.95}
             className="logo-header__wrapper"
           >
@@ -54,6 +54,7 @@ export default function Navbar({ categories }) {
               fontFamily: "inherit",
               textAlign: "center",
               fontSize: "14px",
+              lineHeight: '16px'
             }}
           >
             {item.name}
