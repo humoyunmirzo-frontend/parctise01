@@ -27,7 +27,7 @@ export const DataFetching = {
       return { data: {}, success: false };
     }
   },
-  
+
   async authVerify(body) {
     try {
       const { data } = await axios.post(
@@ -74,6 +74,24 @@ export const DataFetching = {
     } catch (error) {
       console.log(error);
       return { success: false };
+    }
+  },
+
+  async bookingRoom(body, token) {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    try {
+      const { data } = await axios.post(
+        `${BASE_URL}/bookings/create/`,
+        body,
+        config
+      );
+
+      return { data, success: true };
+    } catch (error) {
+      console.log(error);
+      return { data: error.response.data.detail, success: false };
     }
   },
 };

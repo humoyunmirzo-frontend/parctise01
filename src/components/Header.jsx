@@ -16,7 +16,7 @@ import {
   Autocomplete,
 } from "@mui/material";
 import { countries, settings } from "../config";
-import logo from "../assets/log.png";
+import logo from "../assets/logo.png";
 import LazyLoad from "react-lazy-load";
 import { Link } from "react-router-dom";
 import ModalContent from "./Modal";
@@ -25,7 +25,7 @@ import { removeUser, setUser } from "../redux/auth-slice";
 import { DataFetching } from "../api";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { toast } from "react-toastify";
-import { RiUserSettingsLine } from 'react-icons/ri'
+import { getItem } from "../helpers/persistance-storage";
 
 function Header({ children }) {
   const auth = useSelector(({ authSlice }) => authSlice.user);
@@ -46,13 +46,19 @@ function Header({ children }) {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
 
+  useEffect(() => {
+    // Locale Storage User Data
+    const user = getItem("user");
+    user && dispatch(setUser(user));
+  }, []);
+
   useEffect(() => setPhone(`+${country.phone} `), [country]);
   const handlerChange = (e) => setPhone(`${e.target.value}`);
 
   const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
   const handleCloseUserMenu = (e) => {
     setAnchorElUser(null);
-    if (e.target.innerHTML === "Logout") {
+    if (e.target.textContent === "Logout") {
       dispatch(removeUser());
     }
   };
@@ -106,7 +112,7 @@ function Header({ children }) {
       if (success) {
         setIsLoginModal(false);
         setOtp("");
-        dispatch(setUser(res.data.user));
+        dispatch(setUser(res.data));
       }
     } else {
       toast.error("Incorrect code.", {
@@ -125,7 +131,7 @@ function Header({ children }) {
 
     const { data, success } = await DataFetching.authRegister(body);
     if (success) {
-      dispatch(setUser(data.user));
+      dispatch(setUser(data));
       setIsRegisterModal(false);
       setLastname("");
       setFirstname("");
@@ -143,20 +149,19 @@ function Header({ children }) {
         top: "0",
         zIndex: "100",
         fontFamily: "inherit !important",
-        py: '10px',
+        py: "10px",
         background: "transparent",
         color: "black",
         borderBottom: "1px solid #e6e6e6",
         backgroundColor: "white",
       }}
       elevation={0}
-
     >
       <Container
         maxWidth="xl"
-        display={'flex'}
-        alignItems={'center'}
-        height={'100%'}
+        display={"flex"}
+        alignItems={"center"}
+        height={"100%"}
       >
         <Toolbar
           disableGutters
@@ -204,7 +209,7 @@ function Header({ children }) {
                       cursor: "pointer",
                     }}
                   >
-                    {auth.first_name} {auth.last_name.charAt(0)}.
+                    {auth.user.first_name} {auth.user.last_name.charAt(0)}.
                   </Typography>
                   <IconButton
                     sx={{ cursor: "pointer", p: 0.5 }}
@@ -232,7 +237,11 @@ function Header({ children }) {
                   onClose={handleCloseUserMenu}
                 >
                   {settings.map(({ icon, name }) => (
-                    <MenuItem sx={{ display: 'flex', gap: '10px' }} onClick={handleCloseUserMenu}>
+                    <MenuItem
+                      key={name}
+                      sx={{ display: "flex", gap: "10px" }}
+                      onClick={handleCloseUserMenu}
+                    >
                       {icon}
                       <Typography>{name}</Typography>
                     </MenuItem>
@@ -314,7 +323,7 @@ function Header({ children }) {
                   label="Country/Region"
                   inputProps={{
                     ...params.inputProps,
-                    autoComplete: "new-password", // disable autocomplete and autofill
+                    // autoComplete: "new-password", // disable autocomplete and autofill
                   }}
                 />
               )}

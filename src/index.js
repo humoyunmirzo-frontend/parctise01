@@ -4,7 +4,7 @@ import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import Favicon from "react-favicon";
-import logo from "./assets/log.png";
+import logo from "./assets/logo.png";
 //* Import global css
 import "./styles/globals.css";
 

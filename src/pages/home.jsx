@@ -13,6 +13,8 @@ import { BsSearch } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
 import { setRooms } from "../redux/rooms-slice";
 import { setCategory } from "../redux/category-slice";
+import { getItem } from "../helpers/persistance-storage";
+import { setUser } from "../redux/auth-slice";
 
 export default function HomePage() {
   const rooms = useSelector(({ roomsSlice }) => roomsSlice.rooms);
@@ -45,6 +47,8 @@ export default function HomePage() {
     };
 
     getData();
+
+   
   }, []);
 
   const filterData = () => {

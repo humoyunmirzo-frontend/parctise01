@@ -6,7 +6,7 @@ function App() {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/:id" element={<CardDetailPage />} />
-      <Route path="/order/:slug" element={<OrderPage />} />
+      <Route path="/order/:slug/:checkin/:checkout/:numberOfGuests" element={<OrderPage />} />
       <Route path="/not-found" element={<NotFound />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
