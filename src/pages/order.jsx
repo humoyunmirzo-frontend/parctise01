@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import {
   Box,
   Card,
@@ -9,6 +10,11 @@ import {
   IconButton,
   Stack,
   Typography,
+  TextField,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
   Button,
 } from "@mui/material";
 import { Footer, Header } from "../components";
@@ -18,7 +24,6 @@ import { differenceInDays } from "date-fns";
 import LazyLoad from "react-lazy-load";
 import { RiMedalFill, RiStarSFill } from "react-icons/ri";
 import { HiArrowSmLeft } from "react-icons/hi";
-
 import { usePaymentInputs } from "react-payment-inputs";
 import images from "react-payment-inputs/images";
 
@@ -26,8 +31,14 @@ const OrderPage = () => {
   const { slug, checkin, checkout, numberOfGuests } = useParams();
   const [item, setItem] = useState("");
   const [count, setCount] = useState(1);
+  const [cardType, setCardType] = useState("");
   const navigate = useNavigate();
-
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
   useEffect(() => {
     const getData = async () => {
       let slug_room = slug.split("=")[1];
@@ -48,7 +59,20 @@ const OrderPage = () => {
   const { meta, getCardNumberProps, getExpiryDateProps, getCVCProps } =
     usePaymentInputs();
   const { erroredInputs, touchedInputs } = meta;
+  const submitPayment = (data) => {
+    console.log(data);
+    reset();
+  };
+  const handleChange = (event) => {
+    setCardType(event.target.value);
+  };
 
+  const cardTypes = [
+    {
+      value: "Credit or debit card",
+      label: "Credit or debit card",
+    },
+  ];
   return (
     <>
       <Header />
@@ -108,12 +132,198 @@ const OrderPage = () => {
               </Box>
             </Stack>
             <Divider sx={{ my: "40px" }} />
-            <Typography variant="h4" fontFamily={"inherit"} fontWeight={"500"}>
+            <Typography
+              variant="h4"
+              fontFamily={"inherit"}
+              fontWeight={"500"}
+              sx={{ mb: "12px" }}
+            >
               Choose how to pay
             </Typography>
-            <Box mt={"30px"} width={"100%"}>
-            
-            </Box>
+
+            <FormControl
+              component="form"
+              onSubmit={handleSubmit(submitPayment)}
+              fullWidth
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "start",
+                gap: "12px",
+              }}
+            >
+              <TextField
+                id="outlined-select-currency"
+                select
+                label="Select"
+                defaultValue="EUR"
+                {...register("cardType")}
+                sx={{ width: "100%" }}
+                defaultValue="Credit or debit card"
+              >
+                {cardTypes.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "8px",
+                }}
+              >
+                <TextField
+                  sx={{ width: "100%" }}
+                  label="Card number"
+                  id="outlined-start-adornment"
+                  type="number"
+                  {...register("cardNumber", {
+                    required: "Required",
+                    minLength: 16,
+                    maxLength: 16,
+                  })}
+                  error={errors.cardNumber}
+                  placeholder="0000 0000 0000 0000"
+                />
+                <Box sx={{ width: "100%", display: "flex" }}>
+                  <TextField
+                    sx={{ width: "100%" }}
+                    label="Expiration"
+                    id="outlined-start-adornment"
+                    type="number"
+                    {...register("expiration", {
+                      required: "Required",
+                      maxLength: 4,
+                      minLength: 4,
+                    })}
+                    error={errors.expiration}
+                    InputProps={{
+                      sx: {
+                        borderTopRightRadius: "0px",
+                        borderBottomRightRadius: "0px",
+                      },
+                    }}
+                    placeholder="MM/YY"
+                  />
+                  <TextField
+                    sx={{ width: "100%" }}
+                    label="CVV"
+                    id="outlined-start-adornment"
+                    type="number"
+                    {...register("cvv", {
+                      required: "Required",
+                      maxLength: 4,
+                      minLength: 3,
+                    })}
+                    error={errors.cvv}
+                    InputProps={{
+                      sx: {
+                        borderTopLeftRadius: "0px",
+                        borderBottomLeftRadius: "0px",
+                      },
+                    }}
+                    placeholder="123"
+                  />
+                </Box>
+                {errors.cardNumber || errors.expiration || errors.cvv ? (
+                  <Typography
+                    component="div"
+                    sx={{ color: "#f44", fontSize: "14px" }}
+                  >
+                    Check your card number
+                  </Typography>
+                ) : (
+                  ""
+                )}
+              </Box>
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "8px",
+                }}
+              >
+                <Typography component="h6" variant="h6">
+                  Billing address
+                </Typography>
+                <TextField
+                  sx={{ width: "100%" }}
+                  label="Street address"
+                  id="outlined-start-adornment"
+                  {...register("streetAddress", { required: "Required" })}
+                  error={errors.streetAddress}
+                />
+                <TextField
+                  sx={{ width: "100%" }}
+                  label="Apt or suite number"
+                  id="outlined-start-adornment"
+                  {...register("aptOrSuiteNumber")}
+                />
+                <TextField
+                  sx={{ width: "100%" }}
+                  label="City"
+                  id="outlined-start-adornment"
+                  {...register("city", { required: "Required" })}
+                  error={errors.city}
+                />
+                <Box sx={{ width: "100%", display: "flex" }}>
+                  <TextField
+                    sx={{ width: "100%" }}
+                    label="State"
+                    id="outlined-start-adornment"
+                    InputProps={{
+                      sx: {
+                        borderTopRightRadius: "0px",
+                        borderBottomRightRadius: "0px",
+                      },
+                    }}
+                    {...register("state")}
+                  />
+                  <TextField
+                    sx={{ width: "100%" }}
+                    label="ZIP code"
+                    id="outlined-start-adornment"
+                    InputProps={{
+                      sx: {
+                        borderTopLeftRadius: "0px",
+                        borderBottomLeftRadius: "0px",
+                      },
+                    }}
+                    {...register("zipCode", { required: "Required" })}
+                    error={errors.zipCode}
+                  />
+                </Box>
+                {errors.streetAddress || errors.city || errors.zipCode ? (
+                  <Typography
+                    component="div"
+                    sx={{ color: "#f44", fontSize: "14px" }}
+                  >
+                    This is required
+                  </Typography>
+                ) : (
+                  ""
+                )}
+              </Box>
+              <Button
+                variant="contained"
+                color="error"
+                type="submit"
+                sx={{
+                  display: "flex",
+                  minWidth: "25%",
+                  fontWeight: "semibold",
+                  alignSelf: "flex-end",
+                }}
+                size="large"
+              >
+                Pay
+              </Button>
+            </FormControl>
           </Grid>
           <Grid item xs={12} md={5} px={{ xs: "0rem", md: "2rem" }}>
             <Card
