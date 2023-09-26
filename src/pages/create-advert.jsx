@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Footer, Header } from "../components";
-import { Alert, Box, Button, Container, Snackbar, TextField } from "@mui/material";
+import { Alert, Box, Button, Container, Snackbar, TextField, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { postBooking } from "../api";
 import { useSelector } from "react-redux";
@@ -38,6 +38,7 @@ const handleClose = (event, reason) => {
           component="form"
           onSubmit={handleSubmit(createAdvertisement)}
         >
+            <Typography variant="h5" component="h5" sx={{mb:"32px"}}>Create Advertisement</Typography>
            <TextField
           sx={{minWidth:"50%"}}
           id="outlined-basic"
