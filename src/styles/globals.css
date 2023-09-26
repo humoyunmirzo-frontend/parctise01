@@ -47,3 +47,10 @@
   transition: all 0.2s ease-in-out;
   cursor: pointer;
 }
+.menuBtn {
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  font-weight: 700;
+  font-size: 18px;
+}

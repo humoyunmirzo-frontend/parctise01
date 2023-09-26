@@ -18,7 +18,7 @@ import {
 import { countries, settings } from "../config";
 import logo from "../assets/logo.png";
 import LazyLoad from "react-lazy-load";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ModalContent from "./Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser, setUser } from "../redux/auth-slice";
@@ -30,7 +30,7 @@ import { getItem } from "../helpers/persistance-storage";
 function Header({ children }) {
   const auth = useSelector(({ authSlice }) => authSlice.user);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isLoginModal, setIsLoginModal] = useState(false);
@@ -222,7 +222,6 @@ function Header({ children }) {
                   </IconButton>
                 </Stack>
                 <Menu
-                  sx={{ mt: "45px", width: 350 }}
                   anchorEl={anchorElUser}
                   anchorOrigin={{
                     vertical: "top",
@@ -233,18 +232,27 @@ function Header({ children }) {
                     vertical: "top",
                     horizontal: "right",
                   }}
+                  sx={{mt: "45px", width: 350}}
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map(({ icon, name }) => (
-                    <MenuItem
-                      key={name}
-                      sx={{ display: "flex", gap: "10px" }}
-                      onClick={handleCloseUserMenu}
+                  {settings.map(({ icon, name, path }) => (
+                    <button
+                      className="menuBtn"
+                      onClick={() => {
+                        navigate(`/${path}`);
+                      }}
+                    
                     >
-                      {icon}
-                      <Typography>{name}</Typography>
-                    </MenuItem>
+                      <MenuItem
+                        key={name}
+                        sx={{ display: "flex", gap: "10px" }}
+                        onClick={handleCloseUserMenu}
+                      >
+                        {icon}
+                        <Typography>{name}</Typography>
+                      </MenuItem>
+                    </button>
                   ))}
                 </Menu>
               </>

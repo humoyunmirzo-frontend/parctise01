@@ -1,7 +1,7 @@
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const BASE_URL = "https://api.airbnb.tw1.su";
-
 export const DataFetching = {
   async getRoomsData() {
     try {
@@ -95,3 +95,24 @@ export const DataFetching = {
     }
   },
 };
+export const postBooking = async(body,token)=>{
+  const config = {
+    headers:{Authorization:`Bearer ${token}`},
+  };
+  try {
+    const res = await axios.post(`${BASE_URL}/users/announcement-forms/`, 
+
+    {
+      fullname:body.fullName,
+      resort_name:body.resortName,
+      phone:body.phone,
+      address: body.address,
+      description: body.description
+    }, 
+    config 
+    )
+    return res.data
+  } catch (error) {
+  console.log(error);  
+  }
+}

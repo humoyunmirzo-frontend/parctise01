@@ -1,9 +1,10 @@
-import { RiUserSettingsLine } from "react-icons/ri";
+import { RiAdvertisementLine, RiUserSettingsLine } from "react-icons/ri";
 import { IoExitOutline } from "react-icons/io5";
 
 export const settings = [
-  { name: "Profile", icon: <RiUserSettingsLine fontSize={"20px"} /> },
-  { name: "Logout", icon: <IoExitOutline fontSize={"20px"} /> },
+  { name: "Profile", icon: <RiUserSettingsLine fontSize={"20px"} />,path:"" },
+  { name: "Set Advert", icon: <RiAdvertisementLine fontSize={"20px"} />, path:"create-advert" },
+  { name: "Logout", icon: <IoExitOutline fontSize={"20px"} />,path:"" },
 ];
 
 export const countries = [
