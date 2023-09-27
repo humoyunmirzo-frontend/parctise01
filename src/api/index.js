@@ -95,24 +95,15 @@ export const DataFetching = {
     }
   },
 };
-export const postBooking = async(body,token)=>{
+export const getUserBookingList = async(token)=>{
   const config = {
-    headers:{Authorization:`Bearer ${token}`},
-  };
+        headers:{Authorization:`Bearer ${token}`},
+      };
   try {
-    const res = await axios.post(`${BASE_URL}/users/announcement-forms/`, 
-
-    {
-      fullname:body.fullName,
-      resort_name:body.resortName,
-      phone:body.phone,
-      address: body.address,
-      description: body.description
-    }, 
-    config 
-    )
+    const res = await axios.get(`${BASE_URL}/bookings/user-booking-list`, config)
+    console.log(1, res.data)
     return res.data
   } catch (error) {
-  console.log(error);  
+    console.log(error);
   }
 }

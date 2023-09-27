@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { CardDetailPage, HomePage, NotFound, OrderPage } from "./pages";
-import CreateAdvertPage from "./pages/create-advert";
+import UserOrders from "./pages/user-orders";
 
 function App() {
   return (
@@ -8,8 +8,8 @@ function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/:id" element={<CardDetailPage />} />
       <Route path="/order/:slug/:checkin/:checkout/:numberOfGuests" element={<OrderPage />} />
-      <Route path="create-advert" element={<CreateAdvertPage/>}/>
       <Route path="/not-found" element={<NotFound />} />
+      <Route path="/user-orders" element={<UserOrders/>}/>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
